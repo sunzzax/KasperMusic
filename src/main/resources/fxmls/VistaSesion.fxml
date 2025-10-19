@@ -1,11 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kmc.kaspermusic.controladores.ControladorSesion">
-    
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #4e9afc;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../imagenes/logo.png" />
+               </image>
+            </ImageView>
+            <HBox alignment="CENTER" prefHeight="166.0" prefWidth="600.0">
+               <children>
+                  <VBox prefWidth="240.0" spacing="8.0">
+                     <children>
+            
+                                          <TextField alignment="CENTER" prefWidth="200.0" promptText="usuario" VBox.vgrow="NEVER">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </TextField>
+            
+                              <PasswordField alignment="CENTER" prefWidth="200.0" promptText="contraseña" VBox.vgrow="NEVER">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </PasswordField>
+            
+                        <Button prefHeight="35.0" prefWidth="240.0" style="-fx-background-color: #0c5cfa;" text="acceder" textFill="WHITE" VBox.vgrow="NEVER">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
 </AnchorPane>
