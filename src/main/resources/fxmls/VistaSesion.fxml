@@ -12,6 +12,11 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #4e9afc;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
+      <TextField alignment="CENTER" prefWidth="600.0" style="-fx-background-color: #4e9afc; -fx-text-fill: #4e9afc;">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </TextField>
       <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">

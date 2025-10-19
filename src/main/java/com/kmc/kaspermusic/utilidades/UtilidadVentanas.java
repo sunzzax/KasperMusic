@@ -46,18 +46,6 @@ public class UtilidadVentanas {
             stageActual.setFullScreenExitHint("");
             stageActual.setTitle("KasperMusic");
             stageActual.show();
-            
-            /**
-             * Al presionar F11  se invierte el estado de pantalla completa
-             * Si la ventana NO esta en pantalla completa (false), entra en pantalla completa (true)
-             * Si ya esta en pantalla completa (true) vuelve a modo ventana (false)
-             */
-            scene.setOnKeyPressed((event) -> {
-                switch (event.getCode()) {
-                    case F11 -> stageActual.setFullScreen(!stageActual.isFullScreen());
-                }
-            });
-            
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
         }
