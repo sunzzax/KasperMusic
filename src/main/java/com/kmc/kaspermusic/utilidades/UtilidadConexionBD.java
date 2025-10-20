@@ -19,23 +19,26 @@ import java.util.logging.Logger;
 public class UtilidadConexionBD {
 
     private Connection conexion;
-    private String rutaBD = "src/main/resources/kasper.db";
+    private final String rutaBD = "src/main/resources/kasper.db";
 
     // Método privado para realizar la conexión a la base de datos
     public void realizarConexion() {
         try {
-            // Ruta a mi base de datos
-            String rutaBD = "jdbc:sqlite:" + this.rutaBD;
-
             // Archivo físico de la base de datos
             File kasperDB = new File(this.rutaBD);
             // Comprueba si el archivo existe
             boolean existeBD = kasperDB.exists();
 
             // Establecer conexión con la base de datos
-            conexion = DriverManager.getConnection(rutaBD);
+            conexion = DriverManager.getConnection("jdbc:sqlite:" + this.rutaBD);
             System.out.println("Se ha realizado la conexión con la base de datos exitosamente.");
 
+            // Creo una consulta la cual activa las claves foraneas por si acaso estan desactivadas
+            try (Statement consultaFK = conexion.createStatement()) {
+                consultaFK.execute("PRAGMA foreign_keys = ON");
+            }
+
+            //  Si la base de datos no existe llamo a un método el cual crea las tablas iniciales
             if (!existeBD) {
                 crearTablas();
                 System.out.println("Se han creado las tablas en la base de datos.");
@@ -48,7 +51,7 @@ public class UtilidadConexionBD {
 
     // Método publico para obtener la conexión y hacer uso de ella en otras clases
     public Connection getConexion() {
-        if (conexion != null) {
+        if (conexion == null) {
             realizarConexion(); // Si no hay conexión la crea con este método
         }
         return conexion;
@@ -59,6 +62,7 @@ public class UtilidadConexionBD {
         try {
             if (conexion != null && !conexion.isClosed()) {
                 conexion.close();
+                conexion = null;
                 System.out.println("Conexión cerrada correctamente.");
             }
         } catch (SQLException ex) {
@@ -74,7 +78,7 @@ public class UtilidadConexionBD {
             String tablaUsuarios = """
                                    CREATE TABLE IF NOT EXISTS usuarios (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                        nombre TEXT NOT NULL, UNIQUE,
+                                        nombre TEXT NOT NULL UNIQUE,
                                         contrasena TEXT NOT NULL,
                                         rol TEXT NOT NULL
                                    );
@@ -101,8 +105,9 @@ public class UtilidadConexionBD {
                                     );
                                     """;
 
-            consulta.execute(tablaCanciones);
+            // Lanzo las consultas 
             consulta.execute(tablaUsuarios);
+            consulta.execute(tablaCanciones);
             consulta.execute(tablaFavoritos);
 
             /**
