@@ -1,5 +1,6 @@
 package com.kmc.kaspermusic;
 
+import com.kmc.kaspermusic.utilidades.UtilidadConexionBD;
 import com.kmc.kaspermusic.utilidades.UtilidadRutasFxml;
 import com.kmc.kaspermusic.utilidades.UtilidadVentanas;
 import javafx.application.Application;
@@ -19,7 +20,8 @@ public class Principal extends Application {
          */
         UtilidadVentanas cv = new UtilidadVentanas(primaryStage, UtilidadRutasFxml.VISTA_SESION);
         cv.cambiarVentana();
-
+        UtilidadConexionBD conexionBD = new UtilidadConexionBD();
+        conexionBD.realizarConexion();
     }
 
     /**

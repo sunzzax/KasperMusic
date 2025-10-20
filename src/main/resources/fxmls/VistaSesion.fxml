@@ -32,29 +32,29 @@
             
                                           <TextField alignment="CENTER" prefWidth="200.0" promptText="usuario" style="-fx-background-radius: 10;" VBox.vgrow="NEVER">
                            <font>
-                              <Font name="Segoe UI Black" size="16.0" />
+                              <Font name="Segoe UI Black" size="17.0" />
                            </font>
                         </TextField>
             
                               <PasswordField alignment="CENTER" prefWidth="200.0" promptText="contraseña" style="-fx-background-radius: 10;" VBox.vgrow="NEVER">
                            <font>
-                              <Font name="Segoe UI Black" size="16.0" />
+                              <Font name="Segoe UI Black" size="17.0" />
                            </font>
                         </PasswordField>
             
-                        <Button prefHeight="35.0" prefWidth="240.0" style="-fx-background-color: #005cff; -fx-background-radius: 10;" text="acceder" textFill="WHITE" VBox.vgrow="NEVER">
+                        <Button prefHeight="35.0" prefWidth="240.0" style="-fx-background-color: #005cff; -fx-background-radius: 10;" text="ACCEDER" textFill="WHITE" VBox.vgrow="NEVER">
                            <font>
-                              <Font name="Segoe UI Black" size="16.0" />
+                              <Font name="Segoe UI Black" size="17.0" />
                            </font>
                         </Button>
                         <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="¿No tienes una cuenta?">
                            <font>
-                              <Font name="Segoe UI Black" size="13.0" />
+                              <Font name="Segoe UI Black" size="14.0" />
                            </font>
                         </Text>
-                        <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Registrate aquí">
+                        <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="picha aquí">
                            <font>
-                              <Font name="Segoe UI Black" size="12.0" />
+                              <Font name="Segoe UI Black" size="13.0" />
                            </font>
                         </Text>
                      </children>
