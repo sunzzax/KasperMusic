@@ -9,8 +9,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -19,7 +17,7 @@ import java.util.logging.Logger;
 public class UtilidadConexionBD {
 
     private Connection conexion;
-    private final String rutaBD = "src/main/resources/kasper.db";
+    private final String rutaBD = "archivobd/kasper.db";
 
     // Método privado para realizar la conexión a la base de datos
     public void realizarConexion() {
@@ -38,9 +36,14 @@ public class UtilidadConexionBD {
                 consultaFK.execute("PRAGMA foreign_keys = ON");
             }
 
-            //  Si la base de datos no existe llamo a un método el cual crea las tablas iniciales
+            /**
+             * Si la base de datos no existe llamo a un método el cual crea las
+             * tablas iniciales y otro método el cual añade contenido inicial a
+             * las tablas
+             */
             if (!existeBD) {
                 crearTablas();
+                insertarDatos();
                 System.out.println("Se han creado las tablas en la base de datos.");
             }
 
@@ -72,7 +75,7 @@ public class UtilidadConexionBD {
 
     // Método privado para crear las tablas
     private void crearTablas() {
-        try (Statement consulta = conexion.createStatement()) {
+        try (Statement consultaTablas = conexion.createStatement()) {
 
             // TABLA USUARIOS
             String tablaUsuarios = """
@@ -85,12 +88,15 @@ public class UtilidadConexionBD {
                                    """;
 
             // TABLA CANCIONES
-            String tablaCanciones = """
+            String tablaCanciones = """ 
                                     CREATE TABLE IF NOT EXISTS canciones (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         titulo TEXT NOT NULL,
                                         artista TEXT NOT NULL,
-                                        rutaCancion TEXT NOT NULL
+                                        genero TEXT NOT NULL,
+                                        rutaArchivo TEXT NOT NULL,
+                                        rutaImagen TEXT NOT NULL,
+                                        UNIQUE(titulo, artista)
                                     );
                                     """;
 
@@ -106,15 +112,9 @@ public class UtilidadConexionBD {
                                     """;
 
             // Lanzo las consultas 
-            consulta.execute(tablaUsuarios);
-            consulta.execute(tablaCanciones);
-            consulta.execute(tablaFavoritos);
-
-            /**
-             * Llamo al método privado insertarDatos para que añada campos si no
-             * ha fallado en la creacion de la tabla
-             */
-            insertarDatos();
+            consultaTablas.execute(tablaUsuarios);
+            consultaTablas.execute(tablaCanciones);
+            consultaTablas.execute(tablaFavoritos);
 
         } catch (SQLException ex) {
             System.err.println("ERROR al intentar crear las tablas: " + ex.getMessage());
@@ -122,10 +122,84 @@ public class UtilidadConexionBD {
     }
 
     private void insertarDatos() {
-        /**
-         * TODO: Insertar datos en las tablas para que si no existe la base de
-         * datos se inserten los valores iniciales en cada tabla
-         */
+        try (Statement consultaDatos = conexion.createStatement()) {
+
+            /**
+             * Desactivo el autocommit para agrupar todos los inserts en una
+             * sola transacción.
+             *
+             * Con autocommit activado, cada insert se escribe en disco
+             * inmediatamente, lo que es más lento. Al desactivarlo, los cambios
+             * se acumulan en memoria y se escriben juntos al llamar a commit(),
+             * lo que acelera la operación.
+             *
+             * Si ocurre un error, se puede hacer rollback() para deshacer todos
+             * los cambios. Finalmente, se vuelve a activar el autocommit para
+             * que futuras operaciones funcionen normalmente.
+             */
+            conexion.setAutoCommit(false);
+
+            String insertarDatos[] = {
+                "INSERT OR IGNORE INTO usuarios (nombre, contrasena, rol) VALUES ('ricardo', '1234', 'usuario')",
+                "INSERT OR IGNORE INTO usuarios (nombre, contrasena, rol) VALUES ('admin', '1234', 'administrador')",
+                "INSERT OR IGNORE INTO canciones (titulo, artista, genero, rutaArchivo, rutaImagen) VALUES('Blinding Lights', 'The Weeknd', 'Pop', '/canciones/blinding_lights.mp3', '/imagenes/canciones/blinding_lights.png')",
+                "INSERT OR IGNORE INTO canciones (titulo, artista, genero, rutaArchivo, rutaImagen) VALUES('Shape of You', 'Ed Sheeran', 'Pop', '/canciones/shape_of_you.mp3', '/imagenes/canciones/shape_of_you.png')",
+                "INSERT OR IGNORE INTO canciones (titulo, artista, genero, rutaArchivo, rutaImagen) VALUES('Levitating', 'Dua Lipa', 'Pop', '/canciones/levitating.mp3', '/imagenes/canciones/levitating.png')",
+                "INSERT OR IGNORE INTO canciones (titulo, artista, genero, rutaArchivo, rutaImagen) VALUES('Uptown Funk', 'Bruno Mars', 'Pop', '/canciones/uptown_funk.mp3', '/imagenes/canciones/uptown_funk.png')",
+                "INSERT OR IGNORE INTO canciones (titulo, artista, genero, rutaArchivo, rutaImagen) VALUES('Rolling in the Deep', 'Adele', 'Pop', '/canciones/rolling_in_the_deep.mp3', '/imagenes/canciones/rolling_in_the_deep.png')",
+                "INSERT OR IGNORE INTO canciones (titulo, artista, genero, rutaArchivo, rutaImagen) VALUES('Bad Romance', 'Lady Gaga', 'Pop', '/canciones/bad_romance.mp3', '/imagenes/canciones/bad_romance.png')",
+                "INSERT OR IGNORE INTO canciones (titulo, artista, genero, rutaArchivo, rutaImagen) VALUES('Happy', 'Pharrell Williams', 'Pop', '/canciones/happy.mp3', '/imagenes/canciones/happy.png')",
+                "INSERT OR IGNORE INTO canciones (titulo, artista, genero, rutaArchivo, rutaImagen) VALUES('Bohemian Rhapsody', 'Queen', 'Rock', '/canciones/bohemian_rhapsody.mp3', '/imagenes/canciones/bohemian_rhapsody.png')",
+                "INSERT OR IGNORE INTO canciones (titulo, artista, genero, rutaArchivo, rutaImagen) VALUES('Hotel California', 'Eagles', 'Rock', '/canciones/hotel_california.mp3', '/imagenes/canciones/hotel_california.png')",
+                "INSERT OR IGNORE INTO canciones (titulo, artista, genero, rutaArchivo, rutaImagen) VALUES('Stairway to Heaven', 'Led Zeppelin', 'Rock', '/canciones/stairway_to_heaven.mp3', '/imagenes/canciones/stairway_to_heaven.png')",
+                "INSERT OR IGNORE INTO canciones (titulo, artista, genero, rutaArchivo, rutaImagen) VALUES('Smells Like Teen Spirit', 'Nirvana', 'Rock', '/canciones/smells_like_teen_spirit.mp3', '/imagenes/canciones/smells_like_teen_spirit.png')",
+                "INSERT OR IGNORE INTO canciones (titulo, artista, genero, rutaArchivo, rutaImagen) VALUES('Sweet Child O Mine', 'Guns N Roses', 'Rock', '/canciones/sweet_child_o_mine.mp3', '/imagenes/canciones/sweet_child_o_mine.png')",
+                "INSERT OR IGNORE INTO canciones (titulo, artista, genero, rutaArchivo, rutaImagen) VALUES('Highway to Hell', 'AC/DC', 'Rock', '/canciones/highway_to_hell.mp3', '/imagenes/canciones/highway_to_hell.png')",
+                "INSERT OR IGNORE INTO canciones (titulo, artista, genero, rutaArchivo, rutaImagen) VALUES('Wonderwall', 'Oasis', 'Rock', '/canciones/wonderwall.mp3', '/imagenes/canciones/wonderwall.png')",
+                "INSERT OR IGNORE INTO canciones (titulo, artista, genero, rutaArchivo, rutaImagen) VALUES('Claro de Luna', 'Beethoven', 'Clasica', '/canciones/claro_de_luna.mp3', '/imagenes/canciones/claro_de_luna.png')",
+                "INSERT OR IGNORE INTO canciones (titulo, artista, genero, rutaArchivo, rutaImagen) VALUES('Sinfonía Nº5', 'Beethoven', 'Clasica', '/canciones/sinfonia_5.mp3', '/imagenes/canciones/sinfonia_5.png')",
+                "INSERT OR IGNORE INTO canciones (titulo, artista, genero, rutaArchivo, rutaImagen) VALUES('El Lago de los Cisnes', 'Tchaikovsky', 'Clasica', '/canciones/lago_de_los_cisnes.mp3', '/imagenes/canciones/lago_de_los_cisnes.png')",
+                "INSERT OR IGNORE INTO canciones (titulo, artista, genero, rutaArchivo, rutaImagen) VALUES('Canon en Re', 'Pachelbel', 'Clasica', '/canciones/canon_en_re.mp3', '/imagenes/canciones/canon_en_re.png')",
+                "INSERT OR IGNORE INTO canciones (titulo, artista, genero, rutaArchivo, rutaImagen) VALUES('Réquiem', 'Mozart', 'Clasica', '/canciones/requiem_mozart.mp3', '/imagenes/canciones/requiem_mozart.png')"
+            };
+
+            // Ejecuto todos los INSERTS dentro de la transacción
+            for (String insertarDato : insertarDatos) {
+                consultaDatos.executeUpdate(insertarDato);
+            }
+
+            /**
+             * Aquí confirmo todas las operaciones ejecutadas dentro de la
+             * transacción y si todo ha ido bien, los datos se guardan en la
+             * base de datos .
+             */
+            conexion.commit();
+            System.out.println("Datos ingresados correctamente en las tablas.");
+
+        } catch (SQLException ex) {
+            try {
+                /**
+                 * Si llegase a ocurrir algo durante los INSERTS deshago todos
+                 * los cambios hechos dentro de la transacción para no dejar la
+                 * base de datos a medias.
+                 */
+                conexion.rollback();
+            } catch (SQLException e) {
+                System.err.println("Error al hacer rollback: " + e.getMessage());
+            }
+            System.err.println("ERROR al intentar insertar datos en las tablas: " + ex.getMessage());
+        } finally {
+            /**
+             * Aquí restauro el autocommit, es importante para otras operaciones
+             * que haga mas adelante fuera de esta transacción.
+             */
+            try {
+                // Restauro el autocommit
+                conexion.setAutoCommit(true);
+            } catch (SQLException e) {
+                System.err.println("ERROR al intentar restaurar el autocommit: " + e.getMessage());
+            }
+        }
     }
 
 }
