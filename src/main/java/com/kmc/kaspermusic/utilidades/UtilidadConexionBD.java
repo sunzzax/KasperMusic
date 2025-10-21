@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.kmc.kaspermusic.utilidades;
 
 import java.io.File;
@@ -194,7 +190,6 @@ public class UtilidadConexionBD {
              * que haga mas adelante fuera de esta transacción.
              */
             try {
-                // Restauro el autocommit
                 conexion.setAutoCommit(true);
             } catch (SQLException e) {
                 System.err.println("ERROR al intentar restaurar el autocommit: " + e.getMessage());
